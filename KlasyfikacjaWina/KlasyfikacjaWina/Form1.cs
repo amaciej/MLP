@@ -94,7 +94,7 @@ namespace KlasyfikacjaWina
             //   Wagi początkowe
             for(int i = 0; i < wagi.Length; i++)
             {
-                double waga = rnd.NextDouble();
+                double waga = rnd.NextDouble();         //przedział: 0.0 - 1.0
                 wagi[i] = waga;                
             }
 
