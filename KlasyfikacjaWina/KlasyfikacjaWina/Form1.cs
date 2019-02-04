@@ -88,14 +88,14 @@ namespace KlasyfikacjaWina
             double U13 = double.Parse(txtProline.Text, CultureInfo.InvariantCulture.NumberFormat);
 
             double[] wagi = new double[112];
-
+            double[] noweWagi = new double[112];
             Random rnd = new Random();
+
             //   Wagi początkowe
             for(int i = 0; i < wagi.Length; i++)
             {
-                double waga = rnd.Next(1, 5);
-                wagi[i] = waga;
-                
+                double waga = rnd.NextDouble();
+                wagi[i] = waga;                
             }
 
             for (int i = 0; i < wagi.Length; i++)
@@ -150,26 +150,51 @@ namespace KlasyfikacjaWina
             //        Warstwa Wyjściowa
             double S8 = U14 * wagi[91] + U15 * wagi[92] + U16 * wagi[93] + U17 * wagi[94] + U18 * wagi[95]
                 + U19 * wagi[96] + U20 * wagi[97];
-            double U21 = 1 / (1 + Math.Exp(-S8));
+            double U21 = 1 / (1 + Math.Exp(-S8));  //docelowo 1
             Console.WriteLine("S8 = " + S8);
             Console.WriteLine("U21 = " + U21);
             double S9 = U14 * wagi[98] + U15 * wagi[99] + U16 * wagi[100] + U17 * wagi[101] + U18 * wagi[102]
                 + U19 * wagi[103] + U20 * wagi[104];
-            double U22 = 1 / (1 + Math.Exp(-S9));
+            double U22 = 1 / (1 + Math.Exp(-S9)); //docelowo 2
             Console.WriteLine("S9 = " + S9);
             Console.WriteLine("U22 = " + U22);
             double S10 = U14 * wagi[105] + U15 * wagi[106] + U16 * wagi[107] + U17 * wagi[108] + U18 * wagi[109]
                 + U19 * wagi[110] + U20 * wagi[111];
-            double U23 = 1 / (1 + Math.Exp(-S10));
+            double U23 = 1 / (1 + Math.Exp(-S10));   //docelowo 3
             Console.WriteLine("S10 = " + S10);
             Console.WriteLine("U23 = " + U23);
 
             Console.Read();
 
+            //      Faza sygnałów propagacji wstecz
+            double B21 = (1 - U21) * (U21 * (1 - U21));
+            double B22 = (2 - U22) * (U22 * (1 - U22));
+            double B23 = (3 - U23) * (U23 * (1 - U23));
+            Console.WriteLine("B21 = " + B21);
+            Console.WriteLine("B22 = " + B22);
+            Console.WriteLine("B23 = " + B23);
 
+            double B20 = (B21 * wagi[97] + B22 * wagi[104] + B23 * wagi[111]) * (U20 * (1 - U20));
+            double B19 = (B21 * wagi[96] + B22 * wagi[103] + B23 * wagi[110]) * (U19 * (1 - U19));
+            double B18 = (B21 * wagi[95] + B22 * wagi[102] + B23 * wagi[109]) * (U18 * (1 - U18));
+            double B17 = (B21 * wagi[94] + B22 * wagi[101] + B23 * wagi[108]) * (U17 * (1 - U17));
+            double B16 = (B21 * wagi[93] + B22 * wagi[100] + B23 * wagi[107]) * (U16 * (1 - U16));
+            double B15 = (B21 * wagi[92] + B22 * wagi[99] + B23 * wagi[106]) * (U15 * (1 - U15));
+            double B14 = (B21 * wagi[91] + B22 * wagi[98] + B23 * wagi[105]) * (U14 * (1 - U14));
+            Console.WriteLine("B20 = " + B20);
+            Console.WriteLine("B19 = " + B19);
+            Console.WriteLine("B18 = " + B18);
+            Console.WriteLine("B17 = " + B17);
+            Console.WriteLine("B16 = " + B16);
+            Console.WriteLine("B15 = " + B15);
+            Console.WriteLine("B14 = " + B14);
 
+            //          Modyfikacja  wag
+            double p = 0.5;                     //współczynnik uczenia
 
-
+            noweWagi[0] = wagi[0] + p * B14 * U1;
+            Console.WriteLine("W1 = " + noweWagi[0]);
+            noweWagi[1] = wagi[1] + p * B14 * U2;
         }
     }
 }
