@@ -23,28 +23,13 @@ namespace KlasyfikacjaWina
         private void button1_Click(object sender, EventArgs e)
         {
             int counter = 0;
-            string line;
             string text;
             string[] dane = new string[179];
             string[] linia = new string[15];
-            
             Random rnd = new Random();
-            
-            //string[] data = new string[14];
 
-            // Read the file and display it line by line.  
-            //System.IO.StreamReader file =
-            //    new System.IO.StreamReader(@"C:\Users\Adam\Documents\sem. 5\Zastosowanie Sztucznej inteligencji\KlasyfikacjaWina\KlasyfikacjaWina\dane.txt");
-            //while ((line = file.ReadLine()) != null)
-            //{
-            //    dane = line.Split(',');
-            //    System.Console.WriteLine(line);
-            //    counter++;
-            //    //int l = rnd.Next(179);
-            //    //linia[15] = dane[l];
-            //}
             string[] tab = new string[counter];
-            string[] lines = System.IO.File.ReadAllLines(@"dane.txt");
+            string[] lines = System.IO.File.ReadAllLines(@"skalowaneDane.txt");
             foreach (string linia1 in lines)
             {
                 // Use a tab to indent each line of the file.
@@ -69,8 +54,7 @@ namespace KlasyfikacjaWina
             txtHue.Text = linia[11];
             txtOD.Text = linia[12];
             txtProline.Text = linia[13];
-
-            //file.Close();
+            
             System.Console.WriteLine("There were {0} lines.", counter);
             // Suspend the screen.  
             System.Console.ReadLine();
@@ -81,22 +65,12 @@ namespace KlasyfikacjaWina
             txtProline.Text = txtProanth.Text = txtPhenols.Text = txtOD.Text = 
                 txtNonflavanoid.Text = txtMalic.Text = txtMagnesium.Text = txtHue.Text = 
                 txtFlavanoids.Text = txtColor.Text = txtAsh.Text = txtAlcohol.Text = txtAlcalinity.Text = "";
-            //try
-            //{
-            //    Console.Clear();
-            //}
-            //catch(Exception ex)
-            //{
-            //    Console.WriteLine(ex.Message);
-            //}
         }
 
         private void butKlasa_Click(object sender, EventArgs e)
         {
             PropagacjaWPrzód();
         }
-
-
 
         public void PropagacjaWPrzód()
         {
@@ -135,13 +109,14 @@ namespace KlasyfikacjaWina
                 Console.WriteLine("Waga[{0}] = {1}", i, wagi[i]);
             }
             int iter = 0;
-            while (iter<10)
+            double e = Math.E;
+            while (iter<5000)
             {
                 //    Warstwa ukryta 
                 double S1 = U1 * wagi[0] + U2 * wagi[1] + U3 * wagi[2] + U4 * wagi[3] + U5 * wagi[4]
                             + U6 * wagi[5] + U7 * wagi[6] + U8 * wagi[7] + U9 * wagi[8] + U10 * wagi[9]
                             + U11 * wagi[10] + U12 * wagi[11] + U13 * wagi[12];
-                double U14 = 1 / (1 + Math.Exp(-S1));
+                double U14 = 1 / (1 + Math.Pow(e, -S1));
                 Console.WriteLine("S1 = " + S1);
                 Console.WriteLine("U14 = " + U14);
                 double S2 = U1 * wagi[13] + U2 * wagi[14] + U3 * wagi[15] + U4 * wagi[16] + U5 * wagi[17]
@@ -199,6 +174,13 @@ namespace KlasyfikacjaWina
                 Console.WriteLine("U23 = " + U23);
 
                 Console.Read();
+
+                double bł1 = 1 - U21;
+                double bł2 = 2 - U23;
+                double bł3 = 3 - U23;
+                Console.WriteLine("Błąd 1 = " + bł1);
+                Console.WriteLine("Błąd 2 = " + bł3);
+                Console.WriteLine("Błąd 3 = " + bł2);
 
                 //      Faza sygnałów propagacji wstecz
                 double B21 = (1 - U21) * (U21 * (1 - U21));
@@ -354,7 +336,16 @@ namespace KlasyfikacjaWina
                 }
                 iter++;
             }
-           
+            if (U21 > U22 && U21 > U23)
+            {
+                lblKlasa.Text = "Klasa 1";
+            }
+            else if(U22 > U21 && U22 > U23)
+            {
+                lblKlasa.Text = "Klasa 2";
+            }
+            else
+                lblKlasa.Text = "Klasa 3";
         }
     }
 }
